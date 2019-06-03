@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CustomerInquiry.Models;
+using CustomerInquiry.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Converters;
 
 namespace CustomerInquiry
 {
@@ -32,7 +34,11 @@ namespace CustomerInquiry
                 options.UseSqlServer("Data Source=.;Initial Catalog=CustomerInquiry;Integrated Security=True");
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .AddJsonOptions(options => { options.SerializerSettings.Converters.Add(new StringEnumConverter()); })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddTransient<ICustomerInquiryService, CustomerInquiryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
