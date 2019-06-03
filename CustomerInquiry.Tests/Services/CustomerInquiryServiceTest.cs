@@ -1,4 +1,5 @@
 ﻿using CustomerInquiry.Requests;
+using CustomerInquiry.Responses;
 using CustomerInquiry.Services;
 using System;
 using Xunit;
@@ -78,6 +79,69 @@ namespace CustomerInquiry.Tests.Services
             });
 
             Assert.Equal("Invalid Customer ID, Invalid Email", exception.Message);
+        }
+
+        [Fact]
+        public void GetCustomerInquiry_WithCustomerId_ReturnedOnlyCustomerData()
+        {
+            var request = new CustomerInquiryRequest
+            {
+                customerID = 1
+            };
+
+            var actual = _service.GetCustomerInquiry(request);
+
+            Assert.Equal(1, actual.customerID);
+            Assert.Equal("fullname lastname", actual.name);
+            Assert.Equal("0987654321", actual.mobile);
+            Assert.Equal("test@test.com", actual.email);
+            Assert.Empty(actual.transactions);
+        }
+
+        [Fact]
+        public void GetCustomerInquiry_WithEmail_ReturnedCustomerDataWithFirstSuccessTransaction()
+        {
+            var request = new CustomerInquiryRequest
+            {
+                email = "test@test.com"
+            };
+
+            var actual = _service.GetCustomerInquiry(request);
+
+            Assert.Single(actual.transactions);
+
+            var transaction = actual.transactions[0];
+            Assert.Equal(TransactionStatus.Success, actual.transactions[0].status);
+            Assert.Equal(1500.00m, transaction.amount);
+            Assert.Equal("THB", transaction.currency);
+        }
+
+        [Fact]
+        public void GetCustomerInquiry_WithCustomerIdAndEmail_ReturnedCustomerDataWithAllTransaction()
+        {
+            var request = new CustomerInquiryRequest
+            {
+                customerID = 1,
+                email = "test@test.com"
+            };
+
+            var actual = _service.GetCustomerInquiry(request);
+            
+            Assert.Equal(2, actual.transactions.Length);
+        }
+
+        [Fact]
+        public void GetCustomerInquiry_WithCritertiaNotMatched_ReturnedNull()
+        {
+            var request = new CustomerInquiryRequest
+            {
+                customerID = 2,
+                email = "abc@xyz.com"
+            };
+
+            var actual = _service.GetCustomerInquiry(request);
+
+            Assert.Null(actual);
         }
     }
 }
