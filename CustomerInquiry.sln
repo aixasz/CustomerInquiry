@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerInquiry.Api", "CustomerInquiry.Api\CustomerInquiry.Api.csproj", "{90D3CFEC-77BE-4A08-95E2-6C900E3F1182}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerInquiry", "CustomerInquiry\CustomerInquiry.csproj", "{90D3CFEC-77BE-4A08-95E2-6C900E3F1182}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerInquiry.Tests", "CustomerInquiry.Tests\CustomerInquiry.Tests.csproj", "{DD22899A-CD3D-4B78-B715-6CBBBBEAA2F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerInquiry.Tests", "CustomerInquiry.Tests\CustomerInquiry.Tests.csproj", "{DD22899A-CD3D-4B78-B715-6CBBBBEAA2F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
