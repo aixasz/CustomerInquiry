@@ -1,4 +1,4 @@
-# CustomerInquiry
+# Customer Inquiry
 playgroud web api and swagger
 
 
