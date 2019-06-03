@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using CustomerInquiry.Models;
 using CustomerInquiry.Services;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Converters;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace CustomerInquiry
 {
@@ -39,20 +42,43 @@ namespace CustomerInquiry
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddTransient<ICustomerInquiryService, CustomerInquiryService>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",
+                    new Info
+                    {
+                        Title = "Customer Inquiry API",
+                        Version = "v1",
+                        Contact = new Contact
+                        {
+                            Name = "Nattapong Nunpan",
+                            Email = string.Empty,
+                            Url = "https://github.com/aixasz"
+                        },
+                        License = new License
+                        {
+                            Name = "WTFPL",
+                            Url = "http://www.wtfpl.net/"
+                        }
+                    }
+                );
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Customer Inquiry API");
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();
