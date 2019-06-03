@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CustomerInquiry.Requests;
 using CustomerInquiry.Responses;
 using CustomerInquiry.Services;
@@ -20,7 +17,38 @@ namespace CustomerInquiry.Controllers
             _customerInquiryService = customerInquiryService;
         }
 
-        [HttpPost]
+        /// <summary>
+        /// The customer inquiry api
+        /// </summary>
+        /// <remarks>
+        /// Available criteria:
+        ///
+        ///     POST api/CustomerInquiry
+        ///     {
+        ///        "customerID": 1,
+        ///        "email": "test@test.com"
+        ///     }
+        ///     
+        ///     POST api/CustomerInquiry
+        ///     {
+        ///        "customerID": 1
+        ///     }
+        ///     
+        ///     POST api/CustomerInquiry
+        ///     {
+        ///        "email": "test@test.com"
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="request">Inquiry criteria</param>
+        /// <returns>Customer transactions</returns>
+        /// <response code="200">Returns the customer transaction</response>
+        /// <response code="204">Not found</response>
+        /// <response code="400">Invalid criteria</response> 
+        [HttpPost("CustomerInquiry")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         public ActionResult<CustomerInquiryResponse> CustomerInquiry([FromBody]CustomerInquiryRequest request)
         {
             try
