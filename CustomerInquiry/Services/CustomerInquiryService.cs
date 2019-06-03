@@ -1,6 +1,10 @@
 ﻿using CustomerInquiry.Models;
 using CustomerInquiry.Requests;
 using CustomerInquiry.Responses;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace CustomerInquiry.Services
 {
@@ -37,17 +41,24 @@ namespace CustomerInquiry.Services
         {
             if (string.IsNullOrEmpty(request.email) && request.customerID == null)
             {
-                // No criteria
+                throw new Exception("No inquiry criteria");
             }
-
+            var invalidMessages = new List<string>();
             if (request.customerID != null && request.customerID < 1)
             {
-               // invalid customer id        
+                invalidMessages.Add("Invalid Customer ID");
             }
 
-            if (!string.IsNullOrEmpty(request.email))
+            var emailAttribute = new EmailAddressAttribute();
+            if (!string.IsNullOrEmpty(request.email) && !emailAttribute.IsValid(request.email))
             {
-                // invalid email
+                invalidMessages.Add("Invalid Email");
+            }
+
+            if (invalidMessages.Any())
+            {
+                var message = string.Join(", ", invalidMessages);
+                throw new Exception(message);
             }
         }
     }

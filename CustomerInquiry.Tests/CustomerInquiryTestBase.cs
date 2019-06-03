@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CustomerInquiry.Tests
 {
-    public abstract class CustomerInquiryTestBase
+    public abstract class CustomerInquiryTestBase : IDisposable
     {
         protected readonly CustomerInquiryContext DbContext;
 
@@ -21,8 +22,20 @@ namespace CustomerInquiry.Tests
             SeedContext(DbContext);
         }
 
+        public void Dispose()
+        {
+            DbContext?.Dispose();
+        }
+
         private void SeedContext(CustomerInquiryContext dbContext)
         {
+
+            if (dbContext.Customers.Any() && dbContext.Transactions.Any())
+            {
+                // Skip seed data
+                return;
+            }
+
             var customer = new Customer
             {
                 CustomerID = 1,
